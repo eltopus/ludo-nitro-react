@@ -9,16 +9,24 @@ export class Rule {
     rolledDoubleSix: boolean
     
     constructor(scene: Phaser.Scene) {
-        this.players = Array<Player>()
+        this.players = new Array<Player>()
         this.scene = scene
         this.rolledDoubleSix = false
 
+    }
+
+    deleteAllPlayers(): void {
+        this.players = []
     }
 
     addPlayers (players: Array<Player>): void {
         for (let player of players) {
             this.players.unshift(player)
         }
+    }
+
+    addPlayer (player: Player): void {
+        this.players.unshift(player)
     }
 
     addOpposingPlayerstoAI(opposingPlayer: Player): void {
@@ -309,8 +317,7 @@ export class Rule {
             let onlyActivePiece = this.currentPlayer.getFirstActivePiece() // should not be null
             let activePieveMovebys: any[] = []
             let nonActivePieveMovebys: any[] = []
-            let singleDieValue = true
-            let lock = false
+            
             for (let path of paths){
                 if (onlyActivePiece.pieceId === path.activePiece.pieceId) {                
                     activePieveMovebys.push(path.moveBy)

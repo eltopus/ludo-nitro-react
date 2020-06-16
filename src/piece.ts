@@ -23,27 +23,27 @@ export class Piece extends Phaser.GameObjects.Sprite {
     homeStartIndex: number
     text: Phaser.GameObjects.Text
     
-    constructor(scene: Phaser.Scene, x: number, y: number, homeX: number, homeY: number, index: number, homeIndex: number, startIndex: number, pieceType: any, texture: string, homeStartIndex: number){
+    constructor(scene: Phaser.Scene, x: number, y: number, homeX: number, homeY: number, index: number, homeIndex: number, startIndex: number, pieceType: any, texture: string, homeStartIndex: number, pieceState?: string){
         super(scene, x, y, texture);
         this.homeX = homeX
         this.homeY = homeY
         this.pieceId = texture
         this.index = index;
         this.homeIndex = homeIndex;
-        this.scene.add.existing(this);
-        this.pieceState = PieceState.Inactive
+        this.pieceState = this.getPieceState(pieceState)
         this.pieceType = pieceType
         this.startIndex = startIndex
         this.homeStartIndex = homeStartIndex
         this.movement = new Movement(24.1, 48.1, scene);
         this.moving = false
-        this.setInteractive()
         this.on('pointerdown', (pointer: any) => {
           this.scene.events.emit('pieceSelected', this.pieceId)
         });
         this.text = this.scene.add.text(x, y, this.pieceId, { font: "bold 12px Arial", fill: "#000000" })
         this.text.setAlign('center')
         this.text.setVisible(false)
+        this.setInteractive()
+        this.scene.add.existing(this);
         //this.setBlendMode(Phaser.BlendModes.MULTIPLY)
         
         

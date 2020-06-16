@@ -774,17 +774,17 @@ export class Draggable {
             piece.becomeActive()
         }
 
-        if (piece.index >= 52 && piece.index <=56 || 
-            piece.index >= 58 && piece.index <=62 || 
-            piece.index >= 64 && piece.index <=69 || 
-            piece.index >= 70 && piece.index <=74 ) {
+        if ((piece.index >= 52 && piece.index <=56) || 
+            (piece.index >= 58 && piece.index <=62) || 
+            (piece.index >= 64 && piece.index <=69) || 
+            (piece.index >= 70 && piece.index <=74) ) {
             piece.becomeHomeBound()
         }
 
-        if (piece.index === 57 || 
-            piece.index === 63 || 
-            piece.index === 69 || 
-            piece.index === 75  ) {
+        if ((piece.index === 57) || 
+            (piece.index === 63) || 
+            (piece.index === 69) || 
+            (piece.index === 75)  ) {
             piece.becomeExited()
         }
 
@@ -809,11 +809,8 @@ export class Draggable {
             case PieceState.OnHomePath: {
                 return "OnHomePath"
             }
-            case PieceState.Exited: {
-                return "Exited"
-            }
             default:
-                return "UNKNOWN"
+                return "Exited"
         }
     }
 }

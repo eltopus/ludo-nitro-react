@@ -6,7 +6,7 @@ export abstract class  Player {
     exitedPieces: Array<Piece>
     scene: Phaser.Scene
     group: Phaser.Physics.Arcade.Group
-    selectedPiece: Piece
+    selectedPiece: any
 
     constructor(playerName: string, scene: Phaser.Scene) {
         this.playerName = playerName
@@ -18,7 +18,7 @@ export abstract class  Player {
         this.exitedPieces = new Array<Piece>()
     }
 
-    hasSelectedPiece = () => this.selectedPiece !== null
+    hasSelectedPiece = () => this.selectedPiece !== null && (typeof this.selectedPiece !== 'undefined')
     selectedPieceIsActive = () => this.selectedPiece.isActive()
     selectedPieceIsNotActive = () => this.selectedPiece.isNotActive()
     doesNotBelong = (piece: Piece) => this.group.contains(piece) === false
@@ -42,7 +42,7 @@ export abstract class  Player {
                 //console.log("Piece " + pieceId + " has been selected")
                 piece.tint = 0x808080;
                 
-                if (this.selectedPiece != null && this.selectedPiece != piece) {
+                if (this.selectedPiece !== null && (typeof this.selectedPiece !== 'undefined') && this.selectedPiece !== piece) {
                     this.selectedPiece.clearTint()
                 }
                 this.selectedPiece = piece
@@ -178,12 +178,13 @@ export abstract class  Player {
         return false
     }
 
-    getFirstActivePiece(): Piece {
+    getFirstActivePiece(): any {
         for (let piece of this.pieces) {
             if (piece.isActive()){
                 return piece
             }
         }
+        // eslint-disable-next-line
         return null
     }
 
@@ -230,7 +231,7 @@ export abstract class  Player {
         let data = []
         if (ppieces.length > 0){
                 do {
-                let playerPiece = ppieces.pop()
+                let playerPiece: any = ppieces.pop()
                 for (let opposingPiece of this.pieces) {
                     if (opposingPiece.isActive()) {
                         let stopIndex = (playerPiece.index + 12)
@@ -270,9 +271,9 @@ export abstract class  Player {
             }
             do 
             {
-                let playerPiece = pieces.pop()
+                let playerPiece: any = pieces.pop()
                 for (let opposingPiece of opposingPieces){
-                    let startIndex = playerPiece.startIndex
+                    let startIndex: number = playerPiece.startIndex
                     let stopIndex = playerPiece.startIndex + 6
                     if (opposingPiece.indexIsBetween(startIndex, stopIndex)){
 

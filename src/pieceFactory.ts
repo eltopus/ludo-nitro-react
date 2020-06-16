@@ -186,7 +186,7 @@ export class PieceFactory {
 
         }
     }
-    constructor(scene: Phaser.Scene, config: any) {
+    constructor(scene: Phaser.Scene, config?: any) {
        this.scene = scene
     }
 
@@ -299,6 +299,10 @@ export class PieceFactory {
         let homeX = greenPieceConfig[0].hx, homeY = greenPieceConfig[0].hy
         return new Piece(this.scene, 0, 0, homeX, homeY, -1, homeIndex, startIndex, Green, pieceId, homeStartIndex);
        
+    }
+
+    createPiece(config: any): Piece {
+        return new Piece(this.scene, config.x, config.y, config.hx, config.hy, config.index, config.homeEntranceIndex, config.homeStartIndex, config.pieceType, config.pieceId, config.homeStartIndex, config.pieceState);
     }
 
     getPieceState(state: string): any {

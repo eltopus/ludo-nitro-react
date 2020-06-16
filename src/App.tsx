@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
 import Phaser from 'phaser'
 import { IonPhaser } from '@ion-phaser/react'
-import logo from './assets/logo.png'
 import {GameScene} from './gameScene'
+import GameMenu from './containers/GameMenu';
+import {Store} from './Store'
+
+
+
 
 import './App.css'
 
@@ -24,20 +28,38 @@ const game: Phaser.Types.Core.GameConfig = {
   physics: {
     default: 'arcade',
     arcade: {
-      gravity: { y: 400 },
-      debug: true
+      debug: false
     }
   },
   backgroundColor: "#18216D",
   scene: GameScene
 };
 
-const destroy = () => window.location.reload()
+const destroy = () => {
+  
+  window.location.reload()
+} 
 
-export default function App () {
+export default function App (): JSX.Element {
   const [initialize, setInitialize] = useState(false)
+  const {state, dispatch} = React.useContext(Store)
 
+  // React.useEffect(() => {
+  //   state.colors.length === 0 && console.log("Color is zero")
+  // })
+
+  // const fetchDataAction = async () => {
+  //   const URL = 'http://localhost:2567/data'
+  //   const data = await fetch(URL)
+  //   const dataJSON = await data.json();
+  //   return dispatch({
+  //     type: 'FETCH_DATA',
+  //     payload: dataJSON
+  //   })
+  // }
+ 
   return (
+  
     <div className="App">
       <header className="App-header">
         { initialize ? (
@@ -49,8 +71,10 @@ export default function App () {
           </>
         ) : (
           <>
-            <img src={logo} className="App-logo" alt="logo" />
-            <div onClick={() => setInitialize(true)} className="flex">
+            <div className="col-md-6">
+              <h3> Sample Form Container </h3>
+            </div>
+            <div onClick={() => {setInitialize(true)}} className="flex" >
               <a href="#1" className="bttn">Initialize</a>
             </div>
           </>

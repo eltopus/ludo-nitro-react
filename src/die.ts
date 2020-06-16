@@ -2,7 +2,6 @@
 import {SideSceneEmitter} from './sideSceneEmmiter'
 import {PDie} from './persistence/ludo'
 export class Die extends Phaser.GameObjects.Sprite {
-    frameIndex: number
     dieId: string
     rng = new Phaser.Math.RandomDataGenerator()
     dieFrame: number
@@ -11,7 +10,6 @@ export class Die extends Phaser.GameObjects.Sprite {
 
     constructor(scene: Phaser.Scene, x: number, y: number, frameIndex: number, texture: string){
         super(scene, x, y, texture, frameIndex);
-        this.frameIndex = frameIndex
         this.dieId = texture
         this.dieFrame = -1
         this.emitter = new SideSceneEmitter(scene)
@@ -137,5 +135,6 @@ export class Die extends Phaser.GameObjects.Sprite {
             this.scene.registry.set(this.dieId + "-selected", die.selected)
         }
     }
+
 
 }
