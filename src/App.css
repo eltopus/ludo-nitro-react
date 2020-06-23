@@ -118,5 +118,9 @@ a.bttn-dark:focus {
   }
 }
 
+.hidden { 
+  display:none; 
+}
+
 
 

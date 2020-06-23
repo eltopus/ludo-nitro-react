@@ -7,12 +7,14 @@ export class Die extends Phaser.GameObjects.Sprite {
     dieFrame: number
     isSelected: boolean
     emitter: SideSceneEmitter
+    remote: boolean
 
     constructor(scene: Phaser.Scene, x: number, y: number, frameIndex: number, texture: string){
         super(scene, x, y, texture, frameIndex);
         this.dieId = texture
         this.dieFrame = -1
         this.emitter = new SideSceneEmitter(scene)
+        this.remote = false
      
         this.isSelected = false
         this.setInteractive();
@@ -27,9 +29,8 @@ export class Die extends Phaser.GameObjects.Sprite {
         this.scene.anims.create(config)
         this.scene.add.existing(this)        
         this.on('animationcomplete', this.animComplete, this);
-        //this.tint = 0x808080;
-        //this.scene.registry.set(this.dieId, this.getFrameValue(-1))
         this.scene.registry.set(this.dieId + "-selected", false)
+
         this.on('pointerdown', (pointer: any) => {
             if (this.isSelected){
                 this.scale = 1
@@ -49,9 +50,28 @@ export class Die extends Phaser.GameObjects.Sprite {
         this.frame = this.texture.frames[this.dieFrame];
         this.setAngle(180)
         this.scene.registry.set(this.dieId, this.getFrameValue(this.dieFrame))
-        this.emitter.emmitDieRollCompleted(this.dieId, this.getFrameValue(this.dieFrame))
+        if (this.remote) {
+            this.remote = false
+        }else {
+            this.emitter.emmitDieRollCompleted(this.dieId, this.getFrameValue(this.dieFrame))  
+        }
+        
     }
 
+    remoteRoll(value: number): void {
+        this.alpha = 1
+        this.scale = 1
+        this.setAngle(45)
+        let setFrame = this.getFrameFromValue(value)
+        this.remote = true
+        if (setFrame >= 0){
+            this.dieFrame = setFrame
+        }else {
+            this.dieFrame = Phaser.Math.Between(0, 5)
+            
+        }
+        this.anims.play('roll', false)
+    }
     roll(value: number): void {
         this.alpha = 1
         this.scale = 1

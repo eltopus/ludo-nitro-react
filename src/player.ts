@@ -1,14 +1,18 @@
 import {Piece} from './piece'
 import {ActivePath} from "./activePath"
+import { Room} from "colyseus.js";
 export abstract class  Player {
     playerName: string
+    playerTurn: boolean
     pieces: Array<Piece>
     exitedPieces: Array<Piece>
     scene: Phaser.Scene
     group: Phaser.Physics.Arcade.Group
-    selectedPiece: any
+    selectedPiece: Piece
+    sessionId: string
+    room: Room
 
-    constructor(playerName: string, scene: Phaser.Scene) {
+    constructor(playerName: string, scene: Phaser.Scene, room?: Room, playerTurn?: boolean) {
         this.playerName = playerName
         this.scene = scene
         this.group =this.scene.physics.add.group({})
@@ -16,6 +20,47 @@ export abstract class  Player {
         this.scene.events.on('pieceExited', this.destroyPiece, this);
         this.pieces = new Array<Piece>()
         this.exitedPieces = new Array<Piece>()
+        this.room = room
+        this.selectedPiece = null
+        this.playerTurn = playerTurn
+
+        console.log("PlayerTurn: " + playerTurn)
+
+        if (this.room){
+
+            this.room.onMessage("select", (message) => {
+                console.log("recieved select on ", this.room.name, message);
+                this.remotePieceSelected(message.pieceId)
+            });
+
+            this.room.onMessage("move", (message) => {
+                console.log("recieved move on ", this.room.name, message);
+                this.remoteMoveSelectedPiece(message.pieceId, message.moveBy)
+            });
+        }
+    }
+
+    private remotePieceSelected(pieceId: string): void {
+        for (let piece of this.pieces) {
+            if (piece.pieceId === pieceId && this.group.contains(piece)){
+                piece.tint = 0x808080;
+                if (this.selectedPiece !== null && (typeof this.selectedPiece !== 'undefined') && this.selectedPiece !== piece) {
+                    this.selectedPiece.clearTint()
+                }
+                this.selectedPiece = piece
+                return
+            }
+        }
+    }
+
+    private remoteMoveSelectedPiece(pieceId: string, moveBy: number): boolean {
+        for (let piece of this.pieces) {
+            if (piece.pieceId === pieceId && this.group.contains(piece)){
+                piece.move(moveBy)
+                return true
+            }
+        }
+        return false
     }
 
     hasSelectedPiece = () => this.selectedPiece !== null && (typeof this.selectedPiece !== 'undefined')
@@ -37,23 +82,28 @@ export abstract class  Player {
     }
 
     pieceSelected(pieceId: string): void {
+        
         for (let piece of this.pieces) {
             if (piece.pieceId === pieceId && this.group.contains(piece)){
-                //console.log("Piece " + pieceId + " has been selected")
                 piece.tint = 0x808080;
-                
+                if (this.room){
+                    this.room.send("select", { sessionId: "select", pieceId: piece.pieceId})
+                }
                 if (this.selectedPiece !== null && (typeof this.selectedPiece !== 'undefined') && this.selectedPiece !== piece) {
                     this.selectedPiece.clearTint()
                 }
                 this.selectedPiece = piece
-                //this.moveSelectedPiece(4)
-                break
+                return
             }
         }
     }
 
+
     moveSelectedPiece(moveBy: number): boolean {
         if (this.selectedPiece != null && !this.selectedPiece.isMoving()) {
+            if (this.room){
+                this.room.send("move", {pieceId: this.selectedPiece.pieceId, moveBy: moveBy})
+            }
             this.selectedPiece.move(moveBy)
             return true;
         }else {

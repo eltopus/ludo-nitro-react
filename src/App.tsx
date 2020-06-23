@@ -3,10 +3,6 @@ import Phaser from 'phaser'
 import { IonPhaser } from '@ion-phaser/react'
 import {GameScene} from './gameScene'
 import GameMenu from './containers/GameMenu';
-import {Store} from './Store'
-
-
-
 
 import './App.css'
 
@@ -32,7 +28,7 @@ const game: Phaser.Types.Core.GameConfig = {
     }
   },
   backgroundColor: "#18216D",
-  scene: GameScene
+  scene: [GameScene]
 };
 
 const destroy = () => {
@@ -41,8 +37,8 @@ const destroy = () => {
 } 
 
 export default function App (): JSX.Element {
-  const [initialize, setInitialize] = useState(false)
-  const {state, dispatch} = React.useContext(Store)
+  const [initialize, setInitialize] = useState(true)
+
 
   // React.useEffect(() => {
   //   state.colors.length === 0 && console.log("Color is zero")
@@ -73,6 +69,7 @@ export default function App (): JSX.Element {
           <>
             <div className="col-md-6">
               <h3> Sample Form Container </h3>
+              <GameMenu/>
             </div>
             <div onClick={() => {setInitialize(true)}} className="flex" >
               <a href="#1" className="bttn">Initialize</a>

@@ -13,7 +13,7 @@
     "colyseus.js": "^0.13.1",
     "install": "^0.13.0",
     "phaser": "^3.23.0",
-    "phaser3-rex-plugins": "^1.1.18",
+    "phaser3-rex-plugins": "^1.1.14",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.13.1",

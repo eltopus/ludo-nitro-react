@@ -1,21 +1,24 @@
 import React from 'react'
-import {GameScene} from '../gameScene'
 import { Scene } from 'phaser'
 
 interface ButtonProps {
-  scene: GameScene
+  scene: Scene
+  payload: any
+  style: any
 }
 /**
  * This functional component emits an event to the Phaser MainScene
  */
-const Button: React.SFC<ButtonProps> = ({ scene }) => (
-  <button
-    style={{ position: 'absolute', left: 50, bottom: 50, fontSize: 26 }}
-    onClick={() => {
-      scene.events.emit('REACT_EVENT', { action: 'CHANGE_RANDOM_NUMBER', payload: Phaser.Math.RND.between(1, 100) })
-    }}
+const Button: React.SFC<ButtonProps> = ({ scene, payload, style}) => (
+  <button className='btn btn-success'
+  style= {style} 
+  onClick={() => {
+    if (payload.playerName.length > 0 && payload.gameCode.length > 0){
+      scene.events.emit('SUBMIT_FORM', { action: 'SUBMIT_FORM', config: payload })
+    }
+  }}
   >
-    Change the number from React
+    Submit
   </button>
 )
 

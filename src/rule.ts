@@ -15,6 +15,15 @@ export class Rule {
 
     }
 
+    containsPlayerWithSessionId(sessionId: string): boolean {
+        for (let player of this.players){
+            if (player.sessionId === sessionId){
+               return true 
+            }
+        }
+        return false
+    }
+
     deleteAllPlayers(): void {
         this.players = []
     }
@@ -36,7 +45,23 @@ export class Rule {
     }
 
     getNextPlayer(): Player {
+        console.log(this.players)
+        if (this.currentPlayer !== null){
+           console.log("previous player: " + this.currentPlayer.playerName) 
+        }
         this.currentPlayer = this.players.pop()
+        console.log("current player: " + this.currentPlayer.playerName)
+        this.players.unshift(this.currentPlayer)
+        this.scene.registry.set('currentPlayer', this.currentPlayer.playerName)
+        this.scene.events.emit('resetBothDice')
+        this.currentPlayer.bringPiecesToTop()
+        return this.currentPlayer
+    }
+
+    getFirstPlayer(): Player {
+        console.log(this.players)
+        this.currentPlayer = this.players.pop()
+        console.log("current player: " + this.currentPlayer.playerName)
         this.players.unshift(this.currentPlayer)
         this.scene.registry.set('currentPlayer', this.currentPlayer.playerName)
         this.scene.events.emit('resetBothDice')

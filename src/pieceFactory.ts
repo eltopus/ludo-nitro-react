@@ -4,6 +4,8 @@ import {Blue} from './pieceState'
 import {Green} from './pieceState'
 import {Yellow} from './pieceState'
 import {PieceState} from './pieceState'
+import {Room} from "colyseus.js";
+
 export class PieceFactory {
     scene: Phaser.Scene
     config: any
@@ -301,8 +303,8 @@ export class PieceFactory {
        
     }
 
-    createPiece(config: any): Piece {
-        return new Piece(this.scene, config.x, config.y, config.hx, config.hy, config.index, config.homeEntranceIndex, config.homeStartIndex, config.pieceType, config.pieceId, config.homeStartIndex, config.pieceState);
+    createPiece(config: any, room?: Room): Piece {
+        return new Piece(this.scene, config.x, config.y, config.hx, config.hy, config.index, config.homeEntranceIndex, config.homeStartIndex, config.pieceType, config.pieceId, config.homeStartIndex, config.pieceState, room);
     }
 
     getPieceState(state: string): any {

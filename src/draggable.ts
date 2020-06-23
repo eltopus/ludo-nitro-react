@@ -38,7 +38,7 @@ export class Draggable {
 
 
        
-        console.log("x: " + piece.x + " y: " + piece.y + " index: " + piece.index + " state: " + this.showPieceState(piece.pieceState))
+        //console.log("x: " + piece.x + " y: " + piece.y + " index: " + piece.index + " state: " + this.showPieceState(piece.pieceState))
 
 
     }

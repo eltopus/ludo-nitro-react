@@ -1,6 +1,7 @@
 import {Player} from './player'
 import {UserPlayer} from './userPlayer'
 import {PlayerFactory} from './playerFactory'
+import { Room} from "colyseus.js";
 export class UserPlayerFactory implements PlayerFactory {
     playerNames: Array<string>
     scene: Phaser.Scene
@@ -18,8 +19,8 @@ export class UserPlayerFactory implements PlayerFactory {
         return players
     }
 
-    createPlayer(playerName: string): Player {
-      return new UserPlayer(playerName, this.scene)
+    createPlayer(playerName: string, room?: Room, playerTurn?: boolean): Player {
+      return new UserPlayer(playerName, this.scene, room, playerTurn)
     }
 
 }

@@ -1,13 +1,14 @@
 import {PieceState} from './pieceState'
 import {Movement} from './movement'
 import {ActivePath} from './activePath'
-import PathFollower from 'phaser3-rex-plugins/plugins/pathfollower.js';
+import PathFollower from 'phaser3-rex-plugins/plugins/behaviors/pathfollower/Pathfollower.js';
 import MoveTo from 'phaser3-rex-plugins/plugins/moveto.js';
 import {Red} from './pieceState'
 import {Blue} from './pieceState'
 import {Green} from './pieceState'
 import {Yellow} from './pieceState'
 import {PPiece} from './persistence/ludo'
+import { Room} from "colyseus.js";
 
 export class Piece extends Phaser.GameObjects.Sprite {
     index: number
@@ -22,8 +23,10 @@ export class Piece extends Phaser.GameObjects.Sprite {
     homeY: number
     homeStartIndex: number
     text: Phaser.GameObjects.Text
+    PathFollower: any
+    room: Room
     
-    constructor(scene: Phaser.Scene, x: number, y: number, homeX: number, homeY: number, index: number, homeIndex: number, startIndex: number, pieceType: any, texture: string, homeStartIndex: number, pieceState?: string){
+    constructor(scene: Phaser.Scene, x: number, y: number, homeX: number, homeY: number, index: number, homeIndex: number, startIndex: number, pieceType: any, texture: string, homeStartIndex: number, pieceState?: string, room?: Room){
         super(scene, x, y, texture);
         this.homeX = homeX
         this.homeY = homeY
@@ -31,7 +34,7 @@ export class Piece extends Phaser.GameObjects.Sprite {
         this.index = index;
         this.homeIndex = homeIndex;
         this.pieceState = this.getPieceState(pieceState)
-        this.pieceType = pieceType
+        this.pieceType = this.getPieceType(pieceType)
         this.startIndex = startIndex
         this.homeStartIndex = homeStartIndex
         this.movement = new Movement(24.1, 48.1, scene);
@@ -44,7 +47,12 @@ export class Piece extends Phaser.GameObjects.Sprite {
         this.text.setVisible(false)
         this.setInteractive()
         this.scene.add.existing(this);
+        this.room = room
         //this.setBlendMode(Phaser.BlendModes.MULTIPLY)
+
+        if (this.room){
+
+        }
         
         
     }
@@ -60,7 +68,7 @@ export class Piece extends Phaser.GameObjects.Sprite {
 
     move(moveby: number): void {
       
-        if (!this.isActive() && moveby >= 6){
+        if (this.isInActive() && moveby >= 6){
           moveby -= 6
         }
         let activePath = this.generatePath(moveby, true)
@@ -160,6 +168,7 @@ export class Piece extends Phaser.GameObjects.Sprite {
         }
         let pathFollower = new PathFollower(this, config)
         this.moving = true
+ 
 
         scene.tweens.add({
           targets: pathFollower,
